@@ -273,7 +273,9 @@ fileprivate extension Storage {
 
     func copy(to newPath: String) throws {
         do {
-            try fileManager.copyItem(atPath: path, toPath: newPath)
+            let sourceURL = URL(fileURLWithPath: path)
+            let destinationURL = URL(fileURLWithPath: newPath)
+            try fileManager.copyItem(at: sourceURL, to: destinationURL)
         } catch {
             throw LocationError(path: path, reason: .copyFailed(error))
         }
@@ -875,11 +877,11 @@ public extension Folder {
         folders.includeHidden = includeHidden
         try folders.delete()
     }
-    
+
     func isEmpty(includingHidden includeHidden: Bool = false) -> Bool {
         var files = self.files
         files.includeHidden = includeHidden
-        
+
         if files.first != nil {
             return false
         }
